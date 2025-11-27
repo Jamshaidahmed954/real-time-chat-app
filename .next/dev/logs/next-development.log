@@ -214,3 +214,4 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
 [00:27:28.037] Browser WARN    subscribe exception for messages-f080bee4-81f9-46b1-ac12-81629db062ea: {}
 [00:27:29.383] Browser WARN    subscribe exception for messages-aa09dd25-de19-4bf5-b1ae-993cd2a4cce2: {}
 [00:27:30.364] Browser WARN    subscribe exception for messages-d129b775-b844-4e96-8a04-d4d938096478: {}
+[00:53:41.285] Server  LOG      ✓ Compiled in 121ms
