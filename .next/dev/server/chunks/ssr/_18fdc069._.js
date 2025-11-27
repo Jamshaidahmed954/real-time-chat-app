@@ -307,29 +307,30 @@ function Sidebar({ selectedChat, onSelectChat }) {
     const { user, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$context$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const [searchQuery, setSearchQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
-    const [conversations, setConversations] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [users, setUsers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [selectedUserId, setSelectedUserId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         if (!user) return;
-        const loadConversations = async ()=>{
+        const loadUsers = async ()=>{
             try {
                 setIsLoading(true);
-                const data = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2f$chat$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getConversations"])(user.id);
-                setConversations(data);
+                const data = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2f$chat$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getAllUsers"])(user.id);
+                setUsers(data);
             } catch (error) {
-                console.error("Error loading conversations:", error);
+                console.error("Error loading users:", error);
             } finally{
                 setIsLoading(false);
             }
         };
-        loadConversations();
-        // Subscribe to conversation updates
-        const channel = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].channel(`conversations-${user.id}`).on("postgres_changes", {
+        loadUsers();
+        // Subscribe to user updates
+        const channel = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].channel(`users`).on("postgres_changes", {
             event: "*",
             schema: "public",
-            table: "conversations"
+            table: "users"
         }, ()=>{
-            loadConversations();
+            loadUsers();
         });
         channel.subscribe();
         return ()=>{
@@ -342,7 +343,7 @@ function Sidebar({ selectedChat, onSelectChat }) {
         await logout();
         router.push("/login");
     };
-    const filteredChats = conversations.filter((chat)=>chat.other_user.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredUsers = users.filter((user)=>user.name.toLowerCase().includes(searchQuery.toLowerCase()));
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "w-full max-w-xs h-screen bg-sidebar border-r border-sidebar-border flex flex-col",
         children: [
@@ -361,7 +362,7 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                         children: user?.name?.[0]?.toUpperCase()
                                     }, void 0, false, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 77,
+                                        lineNumber: 78,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -372,7 +373,7 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                 children: user?.name
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 81,
+                                                lineNumber: 82,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -380,19 +381,19 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                 children: user?.status
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 84,
+                                                lineNumber: 85,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 80,
+                                        lineNumber: 81,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                lineNumber: 76,
+                                lineNumber: 77,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -416,7 +417,7 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                         d: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c.426 1.756 2.924 1.756 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                                        lineNumber: 91,
+                                                        lineNumber: 92,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -426,23 +427,23 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                         d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                                        lineNumber: 97,
+                                                        lineNumber: 98,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 90,
+                                                lineNumber: 91,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/chat/sidebar.tsx",
-                                            lineNumber: 89,
+                                            lineNumber: 90,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 88,
+                                        lineNumber: 89,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -461,29 +462,29 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                 d: "M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 112,
+                                                lineNumber: 113,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/chat/sidebar.tsx",
-                                            lineNumber: 111,
+                                            lineNumber: 112,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 106,
+                                        lineNumber: 107,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                lineNumber: 87,
+                                lineNumber: 88,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/chat/sidebar.tsx",
-                        lineNumber: 75,
+                        lineNumber: 76,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -491,13 +492,13 @@ function Sidebar({ selectedChat, onSelectChat }) {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                 type: "text",
-                                placeholder: "Search conversations...",
+                                placeholder: "Search users...",
                                 value: searchQuery,
                                 onChange: (e)=>setSearchQuery(e.target.value),
                                 className: "h-9 pl-10 bg-sidebar-accent border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-accent-foreground"
                             }, void 0, false, {
                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                lineNumber: 125,
+                                lineNumber: 126,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -512,47 +513,56 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                     d: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                 }, void 0, false, {
                                     fileName: "[project]/components/chat/sidebar.tsx",
-                                    lineNumber: 138,
+                                    lineNumber: 139,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                lineNumber: 132,
+                                lineNumber: 133,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/chat/sidebar.tsx",
-                        lineNumber: 124,
+                        lineNumber: 125,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/chat/sidebar.tsx",
-                lineNumber: 74,
+                lineNumber: 75,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "flex-1 overflow-y-auto",
                 children: isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "p-4 text-center text-sidebar-accent-foreground text-sm",
-                    children: "Loading conversations..."
+                    children: "Loading users..."
                 }, void 0, false, {
                     fileName: "[project]/components/chat/sidebar.tsx",
-                    lineNumber: 151,
+                    lineNumber: 152,
                     columnNumber: 11
-                }, this) : filteredChats.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                }, this) : filteredUsers.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "p-4 text-center text-sidebar-accent-foreground text-sm",
-                    children: "No conversations yet"
+                    children: "No users found"
                 }, void 0, false, {
                     fileName: "[project]/components/chat/sidebar.tsx",
-                    lineNumber: 153,
+                    lineNumber: 154,
                     columnNumber: 11
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "space-y-1 p-2",
-                    children: filteredChats.map((chat)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                            onClick: ()=>onSelectChat(chat.id),
-                            className: `w-full p-3 rounded-lg transition-colors text-left group ${selectedChat === chat.id ? "bg-sidebar-primary text-sidebar-primary-foreground" : "hover:bg-sidebar-accent text-sidebar-foreground"}`,
+                    children: filteredUsers.map((selectedUser)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: async ()=>{
+                                if (!user) return;
+                                setSelectedUserId(selectedUser.id);
+                                try {
+                                    const conversation = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$supabase$2f$chat$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getOrCreateConversation"])(user.id, selectedUser.id);
+                                    onSelectChat(conversation.id);
+                                } catch (error) {
+                                    console.error("Error creating conversation:", error);
+                                }
+                            },
+                            className: `w-full p-3 rounded-lg transition-colors text-left group ${selectedUserId === selectedUser.id ? "bg-primary text-accent-foreground" : "hover:bg-sidebar-accent text-sidebar-foreground"}`,
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex items-center gap-3 mb-2",
                                 children: [
@@ -560,25 +570,25 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                         className: "relative",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                                src: chat.other_user.avatar_url || "/placeholder.svg",
-                                                alt: chat.other_user.name,
+                                                src: selectedUser.avatar_url || "/placeholder.svg",
+                                                alt: selectedUser.name,
                                                 className: "w-10 h-10 rounded-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 168,
+                                                lineNumber: 178,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: `absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-sidebar ${chat.other_user.status === "online" ? "bg-green-500" : chat.other_user.status === "away" ? "bg-yellow-500" : "bg-gray-500"}`
+                                                className: `absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-sidebar ${selectedUser.status === "online" ? "bg-green-500" : selectedUser.status === "away" ? "bg-yellow-500" : "bg-gray-500"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 173,
+                                                lineNumber: 183,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 167,
+                                        lineNumber: 177,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -586,53 +596,45 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "font-medium text-sm truncate",
-                                                children: chat.other_user.name
+                                                children: selectedUser.name
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 184,
+                                                lineNumber: 194,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                className: `text-xs truncate ${selectedChat === chat.id ? "opacity-80" : "text-sidebar-accent-foreground"}`,
-                                                children: chat.last_message?.text || "No messages yet"
+                                                className: `text-xs truncate ${selectedUserId === selectedUser.id ? "text-accent-foreground/80" : "text-sidebar-accent-foreground"}`,
+                                                children: selectedUser.status
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 185,
+                                                lineNumber: 195,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 183,
+                                        lineNumber: 193,
                                         columnNumber: 19
-                                    }, this),
-                                    chat.unread_count > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold flex-shrink-0",
-                                        children: chat.unread_count
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 192,
-                                        columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                lineNumber: 166,
+                                lineNumber: 176,
                                 columnNumber: 17
                             }, this)
-                        }, chat.id, false, {
+                        }, selectedUser.id, false, {
                             fileName: "[project]/components/chat/sidebar.tsx",
-                            lineNumber: 157,
+                            lineNumber: 158,
                             columnNumber: 15
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/components/chat/sidebar.tsx",
-                    lineNumber: 155,
+                    lineNumber: 156,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/chat/sidebar.tsx",
-                lineNumber: 149,
+                lineNumber: 150,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -644,18 +646,18 @@ function Sidebar({ selectedChat, onSelectChat }) {
                     children: "Logout"
                 }, void 0, false, {
                     fileName: "[project]/components/chat/sidebar.tsx",
-                    lineNumber: 205,
+                    lineNumber: 210,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/chat/sidebar.tsx",
-                lineNumber: 204,
+                lineNumber: 209,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/chat/sidebar.tsx",
-        lineNumber: 72,
+        lineNumber: 73,
         columnNumber: 5
     }, this);
 }

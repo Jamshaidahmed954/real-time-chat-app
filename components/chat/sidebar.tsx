@@ -6,8 +6,8 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import { getConversations } from "@/lib/supabase/chat"
-import type { ConversationWithUser } from "@/lib/types"
+import { getAllUsers, getOrCreateConversation } from "@/lib/supabase/chat"
+import type { User } from "@/lib/types"
 import { supabase } from "@/lib/supabase/client"
 
 interface SidebarProps {
@@ -19,36 +19,37 @@ export default function Sidebar({ selectedChat, onSelectChat }: SidebarProps) {
   const { user, logout } = useAuth()
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
-  const [conversations, setConversations] = useState<ConversationWithUser[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!user) return
 
-    const loadConversations = async () => {
+    const loadUsers = async () => {
       try {
         setIsLoading(true)
-        const data = await getConversations(user.id)
-        setConversations(data)
+        const data = await getAllUsers(user.id)
+        setUsers(data)
       } catch (error) {
-        console.error("Error loading conversations:", error)
+        console.error("Error loading users:", error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    loadConversations()
+    loadUsers()
 
-    // Subscribe to conversation updates
-    const channel = supabase.channel(`conversations-${user.id}`).on(
+    // Subscribe to user updates
+    const channel = supabase.channel(`users`).on(
       "postgres_changes",
       {
         event: "*",
         schema: "public",
-        table: "conversations",
+        table: "users",
       },
       () => {
-        loadConversations()
+        loadUsers()
       },
     )
 
@@ -64,8 +65,8 @@ export default function Sidebar({ selectedChat, onSelectChat }: SidebarProps) {
     router.push("/login")
   }
 
-  const filteredChats = conversations.filter((chat) =>
-    chat.other_user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
   return (
@@ -124,7 +125,7 @@ export default function Sidebar({ selectedChat, onSelectChat }: SidebarProps) {
         <div className="relative">
           <Input
             type="text"
-            placeholder="Search conversations..."
+            placeholder="Search users..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="h-9 pl-10 bg-sidebar-accent border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-accent-foreground"
@@ -148,51 +149,55 @@ export default function Sidebar({ selectedChat, onSelectChat }: SidebarProps) {
       {/* Chats List */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-          <div className="p-4 text-center text-sidebar-accent-foreground text-sm">Loading conversations...</div>
-        ) : filteredChats.length === 0 ? (
-          <div className="p-4 text-center text-sidebar-accent-foreground text-sm">No conversations yet</div>
+          <div className="p-4 text-center text-sidebar-accent-foreground text-sm">Loading users...</div>
+        ) : filteredUsers.length === 0 ? (
+          <div className="p-4 text-center text-sidebar-accent-foreground text-sm">No users found</div>
         ) : (
           <div className="space-y-1 p-2">
-            {filteredChats.map((chat) => (
+            {filteredUsers.map((selectedUser) => (
               <button
-                key={chat.id}
-                onClick={() => onSelectChat(chat.id)}
+                key={selectedUser.id}
+                onClick={async () => {
+                  if (!user) return
+                  setSelectedUserId(selectedUser.id)
+                  try {
+                    const conversation = await getOrCreateConversation(user.id, selectedUser.id)
+                    onSelectChat(conversation.id)
+                  } catch (error) {
+                    console.error("Error creating conversation:", error)
+                  }
+                }}
                 className={`w-full p-3 rounded-lg transition-colors text-left group ${
-                  selectedChat === chat.id
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  selectedUserId === selectedUser.id
+                    ? "bg-primary text-accent-foreground"
                     : "hover:bg-sidebar-accent text-sidebar-foreground"
                 }`}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="relative">
                     <img
-                      src={chat.other_user.avatar_url || "/placeholder.svg"}
-                      alt={chat.other_user.name}
+                      src={selectedUser.avatar_url || "/placeholder.svg"}
+                      alt={selectedUser.name}
                       className="w-10 h-10 rounded-full"
                     />
                     <div
                       className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-sidebar ${
-                        chat.other_user.status === "online"
+                        selectedUser.status === "online"
                           ? "bg-green-500"
-                          : chat.other_user.status === "away"
+                          : selectedUser.status === "away"
                             ? "bg-yellow-500"
                             : "bg-gray-500"
                       }`}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate">{chat.other_user.name}</p>
+                    <p className="font-medium text-sm truncate">{selectedUser.name}</p>
                     <p
-                      className={`text-xs truncate ${selectedChat === chat.id ? "opacity-80" : "text-sidebar-accent-foreground"}`}
+                      className={`text-xs truncate ${selectedUserId === selectedUser.id ? "text-accent-foreground/80" : "text-sidebar-accent-foreground"}`}
                     >
-                      {chat.last_message?.text || "No messages yet"}
+                      {selectedUser.status}
                     </p>
                   </div>
-                  {chat.unread_count > 0 && (
-                    <div className="bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold flex-shrink-0">
-                      {chat.unread_count}
-                    </div>
-                  )}
                 </div>
               </button>
             ))}

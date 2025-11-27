@@ -2267,6 +2267,16 @@
     color: var(--accent-foreground);
   }
 
+  .text-accent-foreground\/80 {
+    color: var(--accent-foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .text-accent-foreground\/80 {
+      color: color-mix(in oklab, var(--accent-foreground) 80%, transparent);
+    }
+  }
+
   .text-background {
     color: var(--background);
   }
