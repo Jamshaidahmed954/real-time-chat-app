@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///D:/real-time-chat-app/app/page.tsx"],"sourcesContent":["\"use client\"\n\nimport { useAuth } from \"@/context/auth-context\"\nimport { useRouter } from \"next/navigation\"\nimport { useEffect } from \"react\"\n\nexport default function Page() {\n  const { user } = useAuth()\n  const router = useRouter()\n\n  useEffect(() => {\n    if (user) {\n      router.push(\"/chat\")\n    } else {\n      router.push(\"/login\")\n    }\n  }, [user, router])\n\n  return null\n}\n"],"names":[],"mappings":";;;;AAEA;AACA;AACA;;AAJA;;;;AAMe,SAAS;;IACtB,MAAM,EAAE,IAAI,EAAE,GAAG,IAAA,yIAAO;IACxB,MAAM,SAAS,IAAA,kJAAS;IAExB,IAAA,0KAAS;0BAAC;YACR,IAAI,MAAM;gBACR,OAAO,IAAI,CAAC;YACd,OAAO;gBACL,OAAO,IAAI,CAAC;YACd;QACF;yBAAG;QAAC;QAAM;KAAO;IAEjB,OAAO;AACT;GAbwB;;QACL,yIAAO;QACT,kJAAS;;;KAFF"}}]
+}
