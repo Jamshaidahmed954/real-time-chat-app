@@ -575,20 +575,20 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                 className: "w-10 h-10 rounded-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 178,
+                                                lineNumber: 179,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: `absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-sidebar ${selectedUser.status === "online" ? "bg-green-500" : selectedUser.status === "away" ? "bg-yellow-500" : "bg-gray-500"}`
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 183,
+                                                lineNumber: 184,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 177,
+                                        lineNumber: 178,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -599,7 +599,7 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                 children: selectedUser.name
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 194,
+                                                lineNumber: 195,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -607,19 +607,19 @@ function Sidebar({ selectedChat, onSelectChat }) {
                                                 children: selectedUser.status
                                             }, void 0, false, {
                                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                                lineNumber: 195,
+                                                lineNumber: 196,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/chat/sidebar.tsx",
-                                        lineNumber: 193,
+                                        lineNumber: 194,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/chat/sidebar.tsx",
-                                lineNumber: 176,
+                                lineNumber: 177,
                                 columnNumber: 17
                             }, this)
                         }, selectedUser.id, false, {
@@ -646,12 +646,12 @@ function Sidebar({ selectedChat, onSelectChat }) {
                     children: "Logout"
                 }, void 0, false, {
                     fileName: "[project]/components/chat/sidebar.tsx",
-                    lineNumber: 210,
+                    lineNumber: 211,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/chat/sidebar.tsx",
-                lineNumber: 209,
+                lineNumber: 210,
                 columnNumber: 7
             }, this)
         ]
