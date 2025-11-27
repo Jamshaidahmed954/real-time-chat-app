@@ -167,6 +167,7 @@ export default function Sidebar({ selectedChat, onSelectChat }: SidebarProps) {
                     console.error("Error creating conversation:", error)
                   }
                 }}
+                
                 className={`w-full p-3 rounded-lg transition-colors text-left group ${
                   selectedUserId === selectedUser.id
                     ? "bg-primary text-accent-foreground"
